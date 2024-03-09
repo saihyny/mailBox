@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 const LoginPage = () => {
-
+  const Navigate = useNavigate()
   const [isnew, setUser] = useState(false);
   const [error, setError] = useState(null);
   const [forgetPass, setForgotpass] = useState(false);
@@ -71,7 +71,7 @@ const LoginPage = () => {
         }
       })
       .then((data) => {
-        
+        Navigate('dashboard')
       })
       .catch((err) => {
         console.log(err);
@@ -104,10 +104,10 @@ const LoginPage = () => {
     <>
       <h6>{error}</h6>
       <label className="block text-sm font-medium leading-6 text-gray-900">Email</label>
-      <input type="email" ref={email_log} required className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-xl ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6  "/>
+      <input type="email" ref={email_log} required />
       <label>Password</label>
-      <input type="password" ref={password_log} required  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-xl ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
-      <button className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-xl hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">submit</button>
+      <input type="password" ref={password_log} required  />
+      <button  className="button">submit</button>
       <button
          className="font-semibold text-indigo-600 hover:text-indigo-500"
         onClick={() => {
@@ -131,12 +131,13 @@ const LoginPage = () => {
     <>
       <h6>{error}</h6>
       <label className="block text-sm font-medium leading-6 text-gray-900">Email</label>
-      <input type="email" ref={email_sig} required  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
+      <input type="email" ref={email_sig} required />
       <label>Password</label>
-      <input type="name" ref={password_sig} required className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+      <input type="name" ref={password_sig} required/>
       <label>Confirm Password</label>
-      <input type="password" required ref={confirm_sig} className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
-      <button className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">submit</button>
+      <input type="password" required ref={confirm_sig}  />
+      <button
+       className="button" >submit</button>
       <button
          className="font-semibold text-indigo-600 hover:text-indigo-500"
         onClick={() => {
@@ -151,10 +152,12 @@ const LoginPage = () => {
     <>
       <h6>{error}</h6>
       <label className="block text-sm font-medium leading-6 text-gray-900">Enter the email with which you have registered</label>
-      <input type="email" ref={forgotEmail} required className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+      <input type="email" ref={forgotEmail} required />
       <button onClick={(e)=>{
         e.preventDefault()
-        forPassFunction()}} className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Send Link</button>
+        forPassFunction()}}
+        className="button"
+         >Send Link</button>
       <button
          className="font-semibold text-indigo-600 hover:text-indigo-500"
         onClick={(e) => {
