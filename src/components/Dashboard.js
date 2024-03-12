@@ -1,10 +1,11 @@
-import React, { useState, useRef } from "react";
 import { Link } from "react-router-dom";
+import React,{useState,useRef} from "react";
 import { Editor, convertToRaw } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { Icons } from "./FileIcons";
 import firebase from "firebase/compat/app"; 
 import "firebase/compat/firestore";
+import emailjs from '@emailjs/browser'; 
 
 const firebaseConfig = {
   apiKey: "AIzaSyDkgrX7UKjFFdorEDSRruYwoJtUCWlDCQo",
@@ -14,30 +15,44 @@ const firebaseConfig = {
   messagingSenderId: "769439014459",
   appId: "1:769439014459:web:fcd7c43af99a44eed1861e"
 };
-firebase.initializeApp(firebaseConfig)
+firebase.initializeApp(firebaseConfig);
 
 export const Dashboard = () => {
   const [editState, setEditState] = useState(null);
+  const formRef = useRef(null);  // Reference to the form
 
-  const handleSendClick = async () => { 
-    const to = "satyasaikiranrocks@gmail.com";
+  const handleSendClick = async (e) => { 
+    e.preventDefault(); 
+
+    const to = "satyasaikiranrocks@gmail.com"; 
     const subject = "test Mail"; 
+    const content =  editState
 
-    // Extract HTML content
-    const content = editState
+    emailjs.init('9IncZkxf9Gt_p0Ewv');
+    // Send email using EmailJS
+    try {
+      emailjs.sendForm(
+        "service_tn4beqr",
+        "template_8tz2wzi",
+        formRef.current
+      );
 
-    // Create a Firestore document
-    await firebase.firestore().collection("mail").add({
-      to,
-      subject,
-    });
+     
+      console.log('Email sent successfully!'); 
+      // ... other post-send actions (reset form, etc.)
+
+    } catch (error) {
+      console.error('Error sending email:', error);
+      // Show an error message to the user
+    }
   };
-
   return (
-    <div className="">
+    <form ref={formRef}>
       <nav className="border-y-red-400 border-2  bg-gray-400 rounded-md ">
         <div className="flex justify-around ">
-          <div className="flex-1">TO test@gmail.com</div>
+        <input  name="to" className="flex-1" 
+    
+        value="satyasaikiranrocks@gmail.com" />
           <div>
             <button className="">{Icons.back}</button>
           </div>
@@ -76,6 +91,6 @@ export const Dashboard = () => {
           <button>{Icons.delete}</button>
         </div>
       </div>
-    </div>
+      </form>
   );
 };
