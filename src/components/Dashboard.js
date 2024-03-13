@@ -1,11 +1,12 @@
-import { Link } from "react-router-dom";
-import React,{useState,useRef} from "react";
-import { Editor, convertToRaw } from "react-draft-wysiwyg";
+import { Link , useNavigate} from "react-router-dom";
+import React, { useState, useRef } from "react";
+import { Editor } from "react-draft-wysiwyg";
+import { ContentState, convertToRaw } from "draft-js";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { Icons } from "./FileIcons";
-import firebase from "firebase/compat/app"; 
+import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
-import emailjs from '@emailjs/browser'; 
+import emailjs from "@emailjs/browser";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDkgrX7UKjFFdorEDSRruYwoJtUCWlDCQo",
@@ -13,36 +14,53 @@ const firebaseConfig = {
   projectId: "mail-777d0",
   storageBucket: "mail-777d0.appspot.com",
   messagingSenderId: "769439014459",
-  appId: "1:769439014459:web:fcd7c43af99a44eed1861e"
+  appId: "1:769439014459:web:fcd7c43af99a44eed1861e",
 };
 firebase.initializeApp(firebaseConfig);
 
 export const Dashboard = () => {
   const [editState, setEditState] = useState(null);
-  const formRef = useRef(null);  // Reference to the form
+  const subjectRef= useRef(null)
+  const navigate = useNavigate()
+  const _contentState = ContentState.createFromText("Sample content state");
+  const raw = convertToRaw(_contentState);
+  const [contentState, setContentState] = useState(raw);
+  
+  const formRef = useRef(null); // Reference to the form
 
-  const handleSendClick = async (e) => { 
-    e.preventDefault(); 
+  const handleSendClick = async (e) => {
+    e.preventDefault();
 
-    const to = "satyasaikiranrocks@gmail.com"; 
-    const subject = "test Mail"; 
-    const content =  editState
+    const to = "satyasaikiransingle@gmail.com";
+    const subject = subjectRef.current.value;
+    const content = contentState.blocks[0].text
+ 
 
-    emailjs.init('9IncZkxf9Gt_p0Ewv');
-    // Send email using EmailJS
+    emailjs.init("9IncZkxf9Gt_p0Ewv");
     try {
-      emailjs.sendForm(
+      await emailjs.sendForm(
         "service_tn4beqr",
         "template_8tz2wzi",
-        formRef.current
+        formRef.current,
+        {
+          to:to,
+          subject:subject,
+          content: JSON.stringify(content)
+        }
       );
-
-     
-      console.log('Email sent successfully!'); 
-      // ... other post-send actions (reset form, etc.)
-
+      await firebase
+        .firestore()
+        .collection("mail")
+        .add({
+          to,
+          subject: subject,
+          content: JSON.stringify(content),
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+        
+      console.log("Email sent successfully!");
     } catch (error) {
-      console.error('Error sending email:', error);
+      console.error("Error sending email:", error);
       // Show an error message to the user
     }
   };
@@ -50,19 +68,23 @@ export const Dashboard = () => {
     <form ref={formRef}>
       <nav className="border-y-red-400 border-2  bg-gray-400 rounded-md ">
         <div className="flex justify-around ">
-        <input  name="to" className="flex-1" 
-    
-        value="satyasaikiranrocks@gmail.com" />
+          <input
+            name="to"
+            className="flex-1"
+            value="satyasaikiranrocks@gmail.com"
+          />
           <div>
-            <button className="">{Icons.back}</button>
+            <button onClick={()=>navigate('/email')}>{Icons.back}</button>
           </div>
         </div>
       </nav>
-      <div className=" bg-gray-300 rounded-md ">test Mail </div>
+      <input ref={subjectRef} className=" bg-gray-300 rounded-md "/>
       {/* <input  placeholder=""></input> */}
       <div className="h-[85.5vh]">
         <Editor
-          onEditorStateChange={(newState) => setEditState(newState)}
+          defaultContentState={contentState}
+          onContentStateChange={setContentState}
+          onEditorStateChange={setEditState}
           editorState={editState}
           toolbarClassName="toolbarClassName"
           wrapperClassName="wrapperClassName"
@@ -91,6 +113,6 @@ export const Dashboard = () => {
           <button>{Icons.delete}</button>
         </div>
       </div>
-      </form>
+    </form>
   );
 };
