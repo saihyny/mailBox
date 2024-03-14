@@ -53,6 +53,8 @@ export const Dashboard = () => {
         .collection("mail")
         .add({
           to,
+          name:'swiggy',
+          isread:false,
           subject: subject,
           content: JSON.stringify(content),
           timestamp: firebase.firestore.FieldValue.serverTimestamp(),

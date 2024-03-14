@@ -71,7 +71,7 @@ const LoginPage = () => {
         }
       })
       .then((data) => {
-        Navigate('dashboard')
+        Navigate('email')
       })
       .catch((err) => {
         console.log(err);

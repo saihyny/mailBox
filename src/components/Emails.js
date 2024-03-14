@@ -2,7 +2,11 @@ import React from "react";
 import { Icons } from "./FileIcons";
 import Sidemenu from "./sidemenu/Sidemenu";
 import Messeges from "./messeges/Messeges";
+import {useSelector,useDispatch} from 'react-redux'
+
 const Emails = () => {
+  const isread = useSelector((state)=>state.email)
+  console.log(isread);
   return (
     <div>
       <div className='flex items-center justify-center bg-slate-300 p-1'>

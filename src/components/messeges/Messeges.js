@@ -6,8 +6,14 @@ import { collection, getDocs } from 'firebase/firestore';
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import Messege from "./Messege";
-
+import { useDispatch } from "react-redux";
+import { getEmails } from "../../Store/emailSilice";
+import { useSelector } from "react-redux";
+import SingleMessege from "./SingleMessege";
+import { backToAllMails } from "../../Store/emailSilice";
 const Messeges = () => {
+  const status = useSelector((state)=>state.email.showMessege)
+  const dispatch = useDispatch()
   const firebaseConfig = {
     apiKey: "AIzaSyDkgrX7UKjFFdorEDSRruYwoJtUCWlDCQo",
     authDomain: "mail-777d0.firebaseapp.com",
@@ -20,7 +26,7 @@ const Messeges = () => {
   const db = getFirestore(app);
   const [emails, setEmails] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  console.log(emails)
+  
   useEffect(() => {
     const fetchEmails = async () => {
       setIsLoading(true);
@@ -31,6 +37,7 @@ const Messeges = () => {
           id: doc.id,
           ...doc.data(),
         }));
+        dispatch(getEmails(emails))
         setEmails(emails);
       } catch (error) {
         console.error("Error fetching emails: ", error);
@@ -44,9 +51,9 @@ const Messeges = () => {
 
   return (
     <div>
-      <div className="flex justify-center bg-slate-100">
+      <div className="flex justify-center bg-slate-500">
         <div>
-          <label>select</label>
+          <button onClick={()=>dispatch(backToAllMails())}>{Icons.back}</button>
           <select>
             <option></option>
           </select>
@@ -64,8 +71,12 @@ const Messeges = () => {
           </select>
         </div>
       </div>
-
-     {isLoading ? <h2>loading</h2> :<Messege mes={emails}/>}
+    { 
+        !status ? (
+          isLoading ? (<h2>Loading</h2>) : <Messege mes={emails}/>
+        ) : <SingleMessege/>
+    }
+    
     </div>
   );
 };
