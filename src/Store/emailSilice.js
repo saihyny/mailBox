@@ -25,8 +25,15 @@ const emailSlice = createSlice({
         backToAllMails:(state,action)=>{
             state.currId=null;
             state.showMessege=false;
+        },
+        deleteEmail:(state,action)=>{
+            state.totalMesseges--;
+            const id = action.payload
+            state.messeges=state.messeges.filter((item)=>{
+                return item.id !== id
+            })
         }
     }
 })
 export default emailSlice.reducer
-export const {isRead,getEmails,backToAllMails} = emailSlice.actions
+export const {isRead,getEmails,backToAllMails,deleteEmail} = emailSlice.actions

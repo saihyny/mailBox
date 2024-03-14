@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { collection, getDocs } from "firebase/firestore";
 import { initializeApp } from "firebase/app";
-import { getFirestore, doc, updateDoc } from "firebase/firestore";
-import {  useDispatch, useSelector } from "react-redux";
-
-import { isRead } from "../../Store/emailSilice";
+import { getFirestore, doc, updateDoc ,deleteDoc } from "firebase/firestore";
+import { useDispatch, useSelector } from "react-redux";
+import { isRead,deleteEmail } from "../../Store/emailSilice";
+import { Icons } from "../FileIcons";
 const Messege = (props) => {
   const [mails, setMails] = useState([]);
-  const dispatch = useDispatch()
-  const messeges = useSelector((state)=>state.email.messeges)
-  
+  const dispatch = useDispatch();
+  const messeges = useSelector((state) => state.email.messeges);
+  console.log(messeges);
   useEffect(() => {
     setMails(messeges);
-  }, []);
+  }, [messeges]);
   const firebaseConfig = {
     apiKey: "AIzaSyDkgrX7UKjFFdorEDSRruYwoJtUCWlDCQo",
     authDomain: "mail-777d0.firebaseapp.com",
@@ -23,27 +22,32 @@ const Messege = (props) => {
   };
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
-  
-   const updateEmail = async(emailId, updateData) => {
-      try {
-        const emailDocRef = doc(db, "mail", emailId);
-        await updateDoc(emailDocRef, updateData);
-        console.log("Email updated successfully");
-      } catch (error) {
-        console.error("Error updating email:", error);
-      } 
+
+  const updateEmail = async (emailId, updateData) => {
+    try {
+      const emailDocRef = doc(db, "mail", emailId);
+      await updateDoc(emailDocRef, updateData);
+      console.log("Email updated successfully");
+    } catch (error) {
+      console.error("Error updating email:", error);
+    }
   };
-  
+  const deleteEmailFun = async (emailId) => {
+    try {
+      const emailDocRef = doc(db, "mail", emailId); // Reference the email document
+      await deleteDoc(emailDocRef);
+      console.log("Email deleted successfully");
+    } catch (error) {
+      console.error("Error deleting email:", error);
+    }
+  };
+
   return (
     <div className="h-[100vh]">
-      {mails.map((item,index) => (
+      {mails.map((item, index) => (
         <div>
-        {item.isread &&  console.log(item.isread)} 
+          {item.isread && console.log(item.isread)}
           <ul
-            onClick={()=>{
-              dispatch(isRead(index))
-             !isRead && updateEmail(item.id,{isread:true})
-            }}
             key={item.id}
             className="flex 
                 justify-around border-solid
@@ -51,14 +55,29 @@ const Messege = (props) => {
                 hover:bg-slate-50
                 border-slate-300 border-b-2 bg-slate-200 py-1 shadow-xl"
           >
-            {!item.isread && <div className="bg-orange-300 w-3 h-3 rounded-full "></div>}
-            <li className="pl-2">{item.to}</li>
-            <li className="pl-2">{item.subject}</li>
-            <li className="pr-0">
+            {!item.isread && (
+              <div className="bg-orange-300 w-3 h-3 rounded-full "></div>
+            )}
+            <li className="pl-2" onClick={() => {
+              dispatch(isRead(index));
+              !isRead && updateEmail(item.id, { isread: true });
+            }}>{item.to}</li>
+            <li className="pl-2" onClick={() => {
+              dispatch(isRead(index));
+              !isRead && updateEmail(item.id, { isread: true });
+            }}>{item.subject}</li>
+            <li className="pr-0" onClick={() => {
+              dispatch(isRead(index));
+              !isRead && updateEmail(item.id, { isread: true });
+            }}>
               {item.timestamp
                 ? item.timestamp.toDate().toLocaleString()
                 : "Loading timestamp..."}
             </li>
+            <button onClick={() =>{ 
+               dispatch(deleteEmail(item.id))
+              deleteEmailFun(item.id)
+              }}>{Icons.delete}</button>
           </ul>
         </div>
       ))}
