@@ -7,6 +7,7 @@ import { Icons } from "./FileIcons";
 import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
 import emailjs from "@emailjs/browser";
+import { useSelector } from "react-redux";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDkgrX7UKjFFdorEDSRruYwoJtUCWlDCQo",
@@ -19,6 +20,8 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 export const Dashboard = () => {
+  const user = useSelector((state)=>state.email.userMail)
+  console.log(user)
   const [editState, setEditState] = useState(null);
   const subjectRef= useRef(null)
   const navigate = useNavigate()
@@ -53,6 +56,7 @@ export const Dashboard = () => {
         .collection("mail")
         .add({
           to,
+          from:user,
           name:'swiggy',
           isread:false,
           subject: subject,

@@ -2,13 +2,15 @@ import React, { useEffect, useState } from "react";
 import { initializeApp } from "firebase/app";
 import { getFirestore, doc, updateDoc ,deleteDoc } from "firebase/firestore";
 import { useDispatch, useSelector } from "react-redux";
-import { isRead,deleteEmail } from "../../Store/emailSilice";
+import { isRead,deleteEmail,deleteSent } from "../../Store/emailSilice";
 import { Icons } from "../FileIcons";
 const Messege = (props) => {
+
+  const messeges = props.mes
+  console.log(messeges)
   const [mails, setMails] = useState([]);
   const dispatch = useDispatch();
-  const messeges = useSelector((state) => state.email.messeges);
-  console.log(messeges);
+
   useEffect(() => {
     setMails(messeges);
   }, [messeges]);
@@ -46,7 +48,6 @@ const Messege = (props) => {
     <div className="h-[100vh]">
       {mails.map((item, index) => (
         <div>
-          {item.isread && console.log(item.isread)}
           <ul
             key={item.id}
             className="flex 
@@ -59,15 +60,15 @@ const Messege = (props) => {
               <div className="bg-orange-300 w-3 h-3 rounded-full "></div>
             )}
             <li className="pl-2" onClick={() => {
-              dispatch(isRead(index));
+              dispatch(isRead({id:index,sm:'readOne'}));
               !isRead && updateEmail(item.id, { isread: true });
             }}>{item.to}</li>
             <li className="pl-2" onClick={() => {
-              dispatch(isRead(index));
+              dispatch(isRead({id:index,sm:'readOne'}));
               !isRead && updateEmail(item.id, { isread: true });
             }}>{item.subject}</li>
             <li className="pr-0" onClick={() => {
-              dispatch(isRead(index));
+              dispatch(isRead({id:index,sm:'readOne'}));
               !isRead && updateEmail(item.id, { isread: true });
             }}>
               {item.timestamp
@@ -76,6 +77,7 @@ const Messege = (props) => {
             </li>
             <button onClick={() =>{ 
                dispatch(deleteEmail(item.id))
+               dispatch(deleteSent(item.id))
               deleteEmailFun(item.id)
               }}>{Icons.delete}</button>
           </ul>

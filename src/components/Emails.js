@@ -21,7 +21,7 @@ const Emails = () => {
           <Sidemenu/>
         </div>
         <div className="bg-slate-600 basis-3/4">
-          <Messeges/>
+          <Messeges />
         </div>
       </div>
     </div>

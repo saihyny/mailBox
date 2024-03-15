@@ -24,8 +24,12 @@ const Messeges = () => {
   };
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
-  const [emails, setEmails] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const  inboxMesseges = useSelector((state) => state.email.messeges);
+  const  sentMesseges = useSelector((state)=>state.email.sent)
+  // useEffect(()=>{
+
+  // },[])
   
   useEffect(() => {
     const fetchEmails = async () => {
@@ -38,7 +42,6 @@ const Messeges = () => {
           ...doc.data(),
         }));
         dispatch(getEmails(emails))
-        setEmails(emails);
       } catch (error) {
         console.error("Error fetching emails: ", error);
       } finally {
@@ -48,7 +51,21 @@ const Messeges = () => {
 
     fetchEmails(); // Call the function to fetch emails
   }, []);
-
+  let render
+  if(status==='showAll'){
+    render = (
+      isLoading ? (<h2>Loading</h2>) :
+      inboxMesseges.length>0 ? <Messege mes={inboxMesseges}/> : (<h2>There is no messeges</h2>)
+    ) 
+  } else if(status === 'readOne'){
+    render = (<SingleMessege/>)
+  } else if(status === 'sent'){
+    render = (
+      isLoading ? (<h2>Loading</h2>) :
+      sentMesseges.length>0 ? <Messege mes={sentMesseges}/> :  (<h2>There is no messeges</h2>)
+    ) 
+  }
+  
   return (
     <div>
       <div className="flex justify-center bg-slate-500">
@@ -72,9 +89,7 @@ const Messeges = () => {
         </div>
       </div>
     { 
-        !status ? (
-          isLoading ? (<h2>Loading</h2>) : <Messege mes={emails}/>
-        ) : <SingleMessege/>
+       render
     }
     
     </div>

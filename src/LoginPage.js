@@ -1,7 +1,10 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { saveUser } from "./Store/emailSilice";
+import { useDispatch } from "react-redux";
 const LoginPage = () => {
   const Navigate = useNavigate()
+  const dispatch = useDispatch()
   const [isnew, setUser] = useState(false);
   const [error, setError] = useState(null);
   const [forgetPass, setForgotpass] = useState(false);
@@ -61,6 +64,7 @@ const LoginPage = () => {
     })
       .then((res) => {
         if (res.ok) {
+          dispatch(saveUser(Email))
           return res.json();
         } else {
           return res.json().then((data) => {

@@ -1,10 +1,11 @@
 import React,{useState} from 'react'
 import {Link,useNavigate} from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useSelector,useDispatch } from 'react-redux'
+import { changeToggle } from '../../Store/emailSilice'
 const Sidemenu = () => {
   const [showIcons,setIcons] = useState(true)
   const total = useSelector((state)=>state.email.totalMesseges)
-  
+  const dispatch = useDispatch()
   const navigate = useNavigate()
   return (
     <div className=''>
@@ -15,7 +16,7 @@ const Sidemenu = () => {
             <h2 className='my-1.5 font-mono border-solid border-2 bg-slate-300 rounded-md'>Inbox- {total}</h2>
           {  showIcons && <> <Link className='my-1.5 font-mono hover:border-solid hover:border-2 hover:rounded'>Unread</Link>
             <Link className='my-1.5 font-mono hover:border-solid hover:border-2 hover:rounded'>Statred</Link>
-            <Link className='my-1.5 font-mono hover:border-solid hover:border-2 hover:rounded'>Sent</Link>
+            <Link className='my-1.5 font-mono hover:border-solid hover:border-2 hover:rounded' onClick={()=>dispatch(changeToggle('sent'))}>Sent</Link>
             <Link className='my-1.5 font-mono hover:border-solid hover:border-2 hover:rounded'>Archive</Link>
             <Link className='my-1.5 font-mono hover:border-solid hover:border-2 hover:rounded'>Spam</Link>
             <Link className='my-2 font-mono hover:border-solid hover:border-2 hover:rounded'>Deleted Items</Link></>}
