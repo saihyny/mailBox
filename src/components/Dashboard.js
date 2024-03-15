@@ -2,13 +2,14 @@ import { Link , useNavigate} from "react-router-dom";
 import React, { useState, useRef } from "react";
 import { Editor } from "react-draft-wysiwyg";
 import { ContentState, convertToRaw } from "draft-js";
+import { backToAllMails } from "../Store/emailSilice";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { Icons } from "./FileIcons";
 import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
 import emailjs from "@emailjs/browser";
 import { useSelector } from "react-redux";
-
+import { useDispatch } from "react-redux";
 const firebaseConfig = {
   apiKey: "AIzaSyDkgrX7UKjFFdorEDSRruYwoJtUCWlDCQo",
   authDomain: "mail-777d0.firebaseapp.com",
@@ -20,8 +21,8 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 export const Dashboard = () => {
+  const dispatch = useDispatch()
   const user = useSelector((state)=>state.email.userMail)
-  console.log(user)
   const [editState, setEditState] = useState(null);
   const subjectRef= useRef(null)
   const navigate = useNavigate()
@@ -38,7 +39,7 @@ export const Dashboard = () => {
     const subject = subjectRef.current.value;
     const content = contentState.blocks[0].text
  
-
+    
     emailjs.init("9IncZkxf9Gt_p0Ewv");
     try {
       await emailjs.sendForm(
@@ -63,7 +64,8 @@ export const Dashboard = () => {
           content: JSON.stringify(content),
           timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         });
-        
+       dispatch(backToAllMails())
+       navigate('/email')
       console.log("Email sent successfully!");
     } catch (error) {
       console.error("Error sending email:", error);

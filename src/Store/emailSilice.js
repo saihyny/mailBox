@@ -5,7 +5,7 @@ const initialState = {
   currId: null,
   totalMesseges: 0,
   userMail: "",
-  sent:[]
+  sent:[],
 };
 
 const emailSlice = createSlice({
@@ -13,10 +13,17 @@ const emailSlice = createSlice({
   initialState,
   reducers: {
     isRead: (state, action) => {
-      state.showMessege = action.payload.sm;
-      const index = action.payload.id;
-      state.currId = action.payload.id;
-      state.messeges[index].isread = true;
+     if(state.showMessege === 'showAll') {
+        state.showMessege = action.payload.sm;
+        const index = action.payload.id;
+        state.currId = action.payload.id;
+        state.messeges[index].isread = true;
+     }else if(state.showMessege === 'sent'){
+        state.showMessege = action.payload.sm;
+        const index = action.payload.id;
+        state.currId = action.payload.id;
+        state.sent[index].isread = true;
+     }
     },
     getEmails: (state, action) => {
         let sent = []

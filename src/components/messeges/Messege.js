@@ -61,15 +61,15 @@ const Messege = (props) => {
             )}
             <li className="pl-2" onClick={() => {
               dispatch(isRead({id:index,sm:'readOne'}));
-              !isRead && updateEmail(item.id, { isread: true });
+              !item.isread && updateEmail(item.id, { isread: true });
             }}>{item.to}</li>
             <li className="pl-2" onClick={() => {
               dispatch(isRead({id:index,sm:'readOne'}));
-              !isRead && updateEmail(item.id, { isread: true });
+              !item.isread && updateEmail(item.id, { isread: true });
             }}>{item.subject}</li>
             <li className="pr-0" onClick={() => {
               dispatch(isRead({id:index,sm:'readOne'}));
-              !isRead && updateEmail(item.id, { isread: true });
+              !item.isread && updateEmail(item.id, { isread: true });
             }}>
               {item.timestamp
                 ? item.timestamp.toDate().toLocaleString()

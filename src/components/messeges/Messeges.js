@@ -58,7 +58,7 @@ const Messeges = () => {
       inboxMesseges.length>0 ? <Messege mes={inboxMesseges}/> : (<h2>There is no messeges</h2>)
     ) 
   } else if(status === 'readOne'){
-    render = (<SingleMessege/>)
+    render = (<SingleMessege />)
   } else if(status === 'sent'){
     render = (
       isLoading ? (<h2>Loading</h2>) :
