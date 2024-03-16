@@ -6,6 +6,7 @@ const initialState = {
   totalMesseges: 0,
   userMail: "",
   sent:[],
+  readEmail:false,
 };
 
 const emailSlice = createSlice({
@@ -14,12 +15,12 @@ const emailSlice = createSlice({
   reducers: {
     isRead: (state, action) => {
      if(state.showMessege === 'showAll') {
-        state.showMessege = action.payload.sm;
+        state.showMessege = 'showAll';
         const index = action.payload.id;
         state.currId = action.payload.id;
         state.messeges[index].isread = true;
      }else if(state.showMessege === 'sent'){
-        state.showMessege = action.payload.sm;
+        state.showMessege = 'sent';
         const index = action.payload.id;
         state.currId = action.payload.id;
         state.sent[index].isread = true;
@@ -60,9 +61,13 @@ const emailSlice = createSlice({
     },
     changeToggle:(state,action)=>{
         state.showMessege=action.payload
+    },
+    readOne: (state,action)=>{
+      state.readEmail=!state.readEmail;
+    
     }
   },
 });
 export default emailSlice.reducer;
-export const { isRead, getEmails, backToAllMails, deleteEmail, saveUser, changeToggle,deleteSent } =
+export const { isRead, getEmails, backToAllMails, deleteEmail, saveUser, changeToggle,deleteSent,readOne } =
   emailSlice.actions;

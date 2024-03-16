@@ -6,11 +6,13 @@ import Messege from "./Messege";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import SingleMessege from "./SingleMessege";
-import { backToAllMails } from "../../Store/emailSilice";
+import { backToAllMails,readOne } from "../../Store/emailSilice";
 import useFetchEmails from "../../hooks/useFetchEmails";
 const Messeges = () => {
   const {isLoading} = useFetchEmails()
   const status = useSelector((state)=>state.email.showMessege)
+  const readSingelOne = useSelector((state)=>state.email.readEmail)
+
   const dispatch = useDispatch()
  
   const  inboxMesseges = useSelector((state) => state.email.messeges);
@@ -23,20 +25,21 @@ const Messeges = () => {
       isLoading ? (<h2>Loading</h2>) :
       inboxMesseges.length>0 ? <Messege mes={inboxMesseges}/> : (<h2>There is no messeges</h2>)
     ) 
-  } else if(status === 'readOne'){
-    render = (<SingleMessege />)
-  } else if(status === 'sent'){
-    render = (
-      isLoading ? (<h2>Loading</h2>) :
-      sentMesseges.length>0 ? <Messege mes={sentMesseges}/> :  (<h2>There is no messeges</h2>)
-    ) 
+  }  else if(status === 'sent'){
+     render = (
+        isLoading ? (<h2>Loading</h2>) :
+        sentMesseges.length>0 ? <Messege mes={sentMesseges}/> :  (<h2>There is no messeges</h2>)
+      ) 
   }
+  
   
   return (
     <div>
       <div className="flex justify-center bg-slate-500">
         <div>
-          <button onClick={()=>dispatch(backToAllMails())}>{Icons.back}</button>
+          <button onClick={()=>{
+            dispatch(backToAllMails())
+          dispatch(readOne())}}>{Icons.back}</button>
           <select>
             <option></option>
           </select>
@@ -55,7 +58,9 @@ const Messeges = () => {
         </div>
       </div>
     { 
-       render
+      readSingelOne 
+      ?  (<SingleMessege status={status}  />) 
+      : render
     }
     
     </div>

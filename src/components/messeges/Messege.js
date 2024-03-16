@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { isRead, deleteEmail, deleteSent } from "../../Store/emailSilice";
+import { isRead, deleteEmail, deleteSent,readOne } from "../../Store/emailSilice";
 import { Icons } from "../FileIcons";
 import useDeleteHook from "../../hooks/useDeleteHook";
 import useUpdateHook from "../../hooks/useUpdateHook";
@@ -35,7 +35,8 @@ const Messege = (props) => {
             <li
               className="pl-2"
               onClick={() => {
-                dispatch(isRead({ id: index, sm: "readOne" }));
+                dispatch(isRead({ id: index}));
+                dispatch(readOne())
                 !item.isread && updateEmail(item.id, { isread: true });
               }}
             >
@@ -44,7 +45,8 @@ const Messege = (props) => {
             <li
               className="pl-2"
               onClick={() => {
-                dispatch(isRead({ id: index, sm: "readOne" }));
+                dispatch(isRead({ id: index }));
+                dispatch(readOne())
                 !item.isread && updateEmail(item.id, { isread: true });
               }}
             >
@@ -53,7 +55,8 @@ const Messege = (props) => {
             <li
               className="pr-0"
               onClick={() => {
-                dispatch(isRead({ id: index, sm: "readOne" }));
+                dispatch(isRead({ id: index}));
+                dispatch(readOne())
                 !item.isread && updateEmail(item.id, { isread: true });
               }}
             >

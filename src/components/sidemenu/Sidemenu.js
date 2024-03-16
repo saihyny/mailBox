@@ -1,16 +1,33 @@
-import React,{useState} from 'react'
+import React,{useEffect, useState} from 'react'
 import {Link,useNavigate} from 'react-router-dom'
 import { useSelector,useDispatch } from 'react-redux'
-import { changeToggle } from '../../Store/emailSilice'
+import { changeToggle ,readOne} from '../../Store/emailSilice'
 const Sidemenu = () => {
+  const status =  useSelector((state)=>state.email.showMessege)
   const [showIcons,setIcons] = useState(true)
   const [classs,setClasss] = useState(false)
+
+  useEffect(()=>{
+    setClasss((state)=>{
+      if( status==='showAll'){
+           return false
+      }else{
+           return true
+      }
+    })
+  },[status])
+  
   const total = useSelector((state)=>state.email.totalMesseges)
+ 
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const clickFun=()=>{
     dispatch(changeToggle('sent'))
-    setClasss((state)=>!state)
+    // if(status==='sent'){
+    //   setClasss(false)
+    // }else{
+    //   setClasss(true)
+    // }
   }
 
   return (
